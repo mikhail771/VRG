@@ -1,0 +1,8 @@
+{
+    "require-dev": {
+        "symfony/web-server-bundle": "^4.3"
+    },
+    "require": {
+        "symfony/form": "^4.3"
+    }
+}
