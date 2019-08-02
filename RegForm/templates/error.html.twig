@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+
+    </script>
+</head>
+<body>
+{% block body %}
+    <h1>Error</h1>
+    <a  href="/registration" id="new_try">
+        Start registration
+    </a>
+{% endblock %}
+<script>
+    $('#new_try').click(function () {
+        sessionStorage.clear();
+    });
+</script>
+</body>
+</html>

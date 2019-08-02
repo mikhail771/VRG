@@ -2,32 +2,56 @@
 
     namespace App\Controller;
 
+
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\Config\Definition\Exception\Exception;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
-    use App\Entity\User;
-    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use App\Entity\Client;
     use Symfony\Component\HttpFoundation\Request;
-    use App\Form\RegistrationForm1;
+    use App\Form\RegistrationForm;
+
 
     class PageController extends AbstractController
     {
         /**
-         * @Route("/")
+         * @Route("/", name="main")
          */
-        public function registration()
+        public function index()
         {
-            return new Response('<html><body><h1>Registration</h1></body></html>');
+            return $this->render('base.html.twig');
         }
 
         /**
-         * @Route("/step1")
+         * @Route("/registration", name="registration")
+         * @throws \Exception
          */
-        public function firstStep(Request $request)
+        public function registration(Request $request)
         {
-            $user = new User();
-            $form1 = $this->createForm(RegistrationForm1::class, $user);
-            $form1->handleRequest($request);
-            return $this->render('templates/base.html.twig', array( 'form' => $form->createView() ));
+            $client = new Client();
+            $form = $this->createForm(RegistrationForm::class, $client);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $client->setFeedbackDataId(md5(uniqid(rand(), 1)));
+                $feedbackDataId = $client->getFeedbackDataId();
+                $em = $this->getDoctrine()->getManager();
+                    $em->persist($client);
+                    $em->flush();
+                    $response = new Response();
+                    $response->setStatusCode(Response::HTTP_OK);
+
+
+
+
+
+                return $this->render('success.html.twig', [
+                    'feedbackDataId' => $feedbackDataId,
+                 ]);
+            }
+
+            return $this->render('registration.html.twig', array(
+                'form' => $form->createView()
+            ));
         }
     }

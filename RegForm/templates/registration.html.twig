@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Registration{% endblock %}</title>
+    <style>
+        .step1 {
+            display: block;
+        }
+        .step2 {
+            display: none;
+        }
+        .step3 {
+            display: none;
+        }
+    </style>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+
+    </script>
+</head>
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="step1">
+        {{ form_row(form.firstName, {'attr':{'class':'valid'}}) }}
+        {{ form_row(form.lastName, {'attr':{'class':'valid'}}) }}
+        {{ form_row(form.telNumber, {'attr':{'class':'valid'}}) }}
+        <input value="Next" type="button" class="next1" disabled="disabled">
+    </div>
+    <div class="step2">
+        {{ form_row(form.city, {'attr':{'class':'valid2'}}) }}
+        {{ form_row(form.street, {'attr':{'class':'valid2'}}) }}
+        {{ form_row(form.homeNumber, {'attr':{'class':'valid2'}}) }}
+        <input value="Next" type="button" class="next2" disabled="disabled">
+    </div>
+    <div class="step3">
+        {{ form_row(form.comment, {'attr':{'class':'valid3'}}) }}
+        {{ form_row(form.Finish) }}
+    </div>
+    {{ form_end(form) }}
+
+    <a  href="/" id="cancel">
+        Cancel
+    </a>
+    <script>
+        jQuery(document).ready(function($){
+            if (!sessionStorage.getItem("step")){
+                sessionStorage.setItem("step","1");
+            } else if(sessionStorage.getItem("step") === "2"){
+                $('.step1').css('display', 'none');
+                $('.step2').css('display', 'block');
+                $('.step3').css('display', 'none');
+            }else if(sessionStorage.getItem("step") === "3"){
+                $('.step1').css('display', 'none');
+                $('.step2').css('display', 'none');
+                $('.step3').css('display', 'block');
+            }
+
+            $('.valid').keyup(function() {
+                let isEmpty = false;
+                $('.valid').each(function() {
+                    if ($(this).val() == '') {
+                        isEmpty = true;
+                    }
+                });
+                if (!isEmpty) {
+                    $('.next1').removeAttr('disabled');
+                }
+            });
+            $('.valid2').keyup(function() {
+                let isEmpty = false;
+                $('.valid2').each(function () {
+                    if ($(this).val() == '') {
+                        isEmpty = true;
+                    }
+                });
+                if (!isEmpty) {
+                    $('.next2').removeAttr('disabled');
+                }
+            });
+
+        $('.next1').click(function () {
+            $('.step1').css('display', 'none');
+            $('.step2').css('display', 'block');
+            sessionStorage.setItem("step","2");
+        });
+            $('.next2').click(function () {
+                $('.step2').css('display', 'none');
+                $('.step3').css('display', 'block');
+                sessionStorage.setItem("step","3");
+            });
+
+            let firstName = document.getElementById("registration_form_firstName");
+            let lastName = document.getElementById("registration_form_lastName");
+            let telNumber = document.getElementById("registration_form_telNumber");
+            let city = document.getElementById("registration_form_city");
+            let street = document.getElementById("registration_form_street");
+            let homeNumber = document.getElementById("registration_form_homeNumber");
+            let comment = document.getElementById("registration_form_comment");
+
+            $(firstName).val(sessionStorage.getItem("firstName"));
+            $(lastName).val(sessionStorage.getItem("lastName"));
+            $(telNumber).val(sessionStorage.getItem("telNumber"));
+            $(city).val(sessionStorage.getItem("city"));
+            $(street).val(sessionStorage.getItem("street"));
+            $(homeNumber).val(sessionStorage.getItem("homeNumber"));
+            $(comment).val(sessionStorage.getItem("comment"));
+
+            $('#registration_form_firstName').blur(function () {
+                sessionStorage.setItem('firstName',$('#registration_form_firstName').val());
+            });
+            $('#registration_form_lastName').blur(function () {
+                sessionStorage.setItem('lastName',$('#registration_form_lastName').val());
+            });
+            $('#registration_form_telNumber').blur(function () {
+                sessionStorage.setItem('telNumber',$('#registration_form_telNumber').val());
+            });
+            $('#registration_form_city').blur(function () {
+                sessionStorage.setItem('city',$('#registration_form_city').val());
+            });
+            $('#registration_form_street').blur(function () {
+                sessionStorage.setItem('street',$('#registration_form_street').val());
+            });
+            $('#registration_form_homeNumber').blur(function () {
+                sessionStorage.setItem('homeNumber',$('#registration_form_homeNumber').val());
+            });
+            $('#registration_form_comment').blur(function () {
+                sessionStorage.setItem('comment',$('#registration_form_comment').val());
+            });
+        });
+    </script>
+{% endblock %}
