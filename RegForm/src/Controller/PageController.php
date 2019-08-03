@@ -2,15 +2,12 @@
 
     namespace App\Controller;
 
-
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\Config\Definition\Exception\Exception;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
     use App\Entity\Client;
     use Symfony\Component\HttpFoundation\Request;
     use App\Form\RegistrationForm;
-
 
     class PageController extends AbstractController
     {
@@ -37,21 +34,23 @@
                 $feedbackDataId = $client->getFeedbackDataId();
                 $em = $this->getDoctrine()->getManager();
                     $em->persist($client);
-                    $em->flush();
-                    $response = new Response();
-                    $response->setStatusCode(Response::HTTP_OK);
-
-
-
-
-
+                    try {
+                        $em->flush();
+                        $response = new Response();
+                        $response->setStatusCode(Response::HTTP_OK);
+                    }
+                    finally {
+                        if (!isset($response)) {
+                            return $this->render('error.html.twig');
+                        }
+                    }
                 return $this->render('success.html.twig', [
-                    'feedbackDataId' => $feedbackDataId,
+                    'feedbackDataId' => $feedbackDataId
                  ]);
             }
 
-            return $this->render('registration.html.twig', array(
+            return $this->render('registration.html.twig', [
                 'form' => $form->createView()
-            ));
+            ]);
         }
     }
